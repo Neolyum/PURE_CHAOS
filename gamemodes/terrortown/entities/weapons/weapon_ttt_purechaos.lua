@@ -7,13 +7,18 @@ if SERVER then
     CreateConVar("purechaos_range", 4000, { FCVAR_ARCHIVE, FCVAR_REPLICATED }, "The range of PURE CHAOS.")
     CreateConVar("purechaos_verticalpower", 30, { FCVAR_ARCHIVE, FCVAR_REPLICATED }, "The strength of flying up and down while PURE CHAOS.")
     CreateConVar("purechaos_damage", 110, { FCVAR_ARCHIVE, FCVAR_REPLICATED }, "The damage of PURE CHAOS.")
+    CreateConVar("purechaos_use_alt_sound", 0, {FCVAR_ARCHIVE, FCVAR_REPLICATED}, "Use kller sound for Pure Chaos.")
 
-    print("PURE CHAOS by Neolyum loaded.")
+
+    print("PURE CHAOS v1.1 by Neolyum loaded.")
 else
     CreateClientConVar("purechaos_range", 4000, true, false, "The range of PURE CHAOS.")
     CreateClientConVar("purechaos_verticalpower", 30, true, false, "The strength of flying up and down while PURE CHAOS.")
     CreateClientConVar("purechaos_damage", 110, true, false, "The damage of PURE CHAOS.")
-    print("PURE CHAOS by Neolyum loaded.")
+    CreateClientConVar("purechaos_use_alt_sound", 0, true, false, "Use kller sound for Pure Chaos.")
+    CreateClientConVar("purechaos_use_alt_sound_override", -1, true, true, "Override server default for the alternative Sound: -1 = use server setting, 0 = off, 1 = use alt sound")
+
+    print("PURE CHAOS v1.1 by Neolyum loaded.")
 end
 
 SWEP.Base = "weapon_tttbase"
@@ -73,8 +78,21 @@ function SWEP:PrimaryAttack()
     owner:SetWalkSpeed(originalWalkSpeed * 0.5)
     owner:SetMoveType(MOVETYPE_FLY)
 
-    -- remember to also change this in the PlayerDeath hook at the bottom of the file
-    self:EmitSound("pure_chaos_kller.ogg", SNDLVL_NONE)
+    local useAlt = GetConVar("purechaos_use_alt_sound"):GetBool()
+
+    -- Check for client override
+    if owner:IsPlayer() and owner:IsValid() then
+        local override = owner:GetInfoNum("purechaos_use_alt_sound_override", -1)
+        if override == 0 then
+            useAlt = false
+        elseif override == 1 then
+            useAlt = true
+        end
+    end
+
+    local soundFile = useAlt and "pure_chaos_kller.ogg" or "pure_chaos.ogg"
+
+    self:EmitSound(soundFile, SNDLVL_NONE)
     owner:SetNWBool("PureChaosActive", true)
 
 
@@ -213,7 +231,19 @@ end)
 hook.Add("PlayerDeath", "PureChaos_StopSoundOnDeath", function(victim, inflictor, attacker)
     if not IsValid(victim) then return end
     if victim:GetNWBool("PureChaosActive", false) then
-        --victim:StopSound("pure_chaos.ogg")
-        victim:StopSound("pure_chaos_kller.ogg")
+        local useAlt = GetConVar("purechaos_use_alt_sound"):GetBool()
+
+        -- Check for client override
+        if owner:IsPlayer() and owner:IsValid() then
+            local override = owner:GetInfoNum("purechaos_use_alt_sound_override", -1)
+            if override == 0 then
+                useAlt = false
+            elseif override == 1 then
+                useAlt = true
+            end
+        end
+
+        local soundFile = useAlt and "pure_chaos_kller.ogg" or "pure_chaos.ogg"
+        victim:StopSound(soundFile)
     end
 end)
