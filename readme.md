@@ -2,7 +2,7 @@
 
 ## Overview
 **PURE CHAOS** is a powerful traitor weapon for **Trouble in Terrorist Town 2 (TTT2)** in **Garry's Mod**. Inspired by Scarlet Witch, this ultimate ability allows the user to hover and unleash chaos, damaging all enemies within range.
-Please mind that I did not include the icon materials/scarlet_witch.png and the sound gamemodes/terrortown/content/sound/pure_chaos.ogg (see .gitignore) into this repository!
+Please mind that I did not include the icon materials/Scarlet_Witch.png and the sound gamemodes/terrortown/content/sound/pure_chaos.ogg (see .gitignore) into this repository!
 
 ## Features
 - **Flight Ability:** Gain the ability to hover and move freely in the air.
@@ -19,11 +19,14 @@ OR
    ```
    garrysmod/addons/ttt2_purechaos/
    ```
-2. add the icon materials/scarlet_witch.png
+2. add the icon materials/Scarlet_Witch.png
 3. add the sound gamemodes/terrortown/content/sound/pure_chaos.ogg
-(4. Ensure your **TTT2** gamemode is installed and active.)
+4. (Ensure your **TTT2** gamemode is installed and active.)
 5. Restart your server to apply changes.
 
+There is a possibility for an alternative sound to play.
+This is the sound gamemodes/terrortown/content/sound/pure_chaos_kller.ogg. It's named like that, as the alternative version currently in use is provided by kller. This file is also actually included in this repo.
+The ingame settings menu includes a toggle and a client side override. The client convar purechaos_use_alt_sound_override, which is accessible in the console is also a possibility: -1 follows the server setting, 0 and 1 set it to force off and force on respectively.
 
 ## Usage
 - **Slot:** 7
