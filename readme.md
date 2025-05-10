@@ -12,14 +12,17 @@ Please mind that I did not include the icon materials/scarlet_witch.png and the 
 - **Custom Sound & Icon:** Includes a unique activation sound and an in-game icon.
 
 ## Installation
+subscribe to https://steamcommunity.com/sharedfiles/filedetails/?id=3421161653
+
+OR 
 1. Download or clone the repository into your **Garry's Mod** addons directory:
    ```
    garrysmod/addons/ttt2_purechaos/
    ```
-2. Ensure your **TTT2** gamemode is installed and active.
-3. Restart your server to apply changes.
-
-OR subscribe to https://steamcommunity.com/sharedfiles/filedetails/?id=3421161653
+2. add the icon materials/scarlet_witch.png
+3. add the sound gamemodes/terrortown/content/sound/pure_chaos.ogg
+(4. Ensure your **TTT2** gamemode is installed and active.)
+5. Restart your server to apply changes.
 
 
 ## Usage

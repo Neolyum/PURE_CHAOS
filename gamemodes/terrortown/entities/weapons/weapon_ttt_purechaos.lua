@@ -1,6 +1,7 @@
 if SERVER then
     AddCSLuaFile()
     resource.AddFile("gamemodes/terrortown/content/sound/pure_chaos.ogg")
+    resource.AddFile("gamemodes/terrortown/content/sound/pure_chaos_kller.ogg")
     resource.AddFile("materials/Scarlet_Witch.png")
 
     CreateConVar("purechaos_range", 4000, { FCVAR_ARCHIVE, FCVAR_REPLICATED }, "The range of PURE CHAOS.")
@@ -63,7 +64,7 @@ function SWEP:PrimaryAttack()
     -- Give the player fall damage immunity
     owner.fallDamageImmune = true
 
-    owner:SendLua("RunConsoleCommand('thirdperson')")
+    -- owner:SendLua("RunConsoleCommand('thirdperson')")
 
     -- Store original movement data
     local originalWalkSpeed = owner:GetWalkSpeed()
@@ -72,11 +73,12 @@ function SWEP:PrimaryAttack()
     owner:SetWalkSpeed(originalWalkSpeed * 0.5)
     owner:SetMoveType(MOVETYPE_FLY)
 
-    owner:EmitSound("pure_chaos.ogg", 0)
+    -- remember to also change this in the PlayerDeath hook at the bottom of the file
+    self:EmitSound("pure_chaos_kller.ogg", SNDLVL_NONE)
     owner:SetNWBool("PureChaosActive", true)
 
 
-     -- checking if we are close to the ground and pushing up if true. When we land,
+    -- checking if we are close to the ground and pushing up if true. When we land,
     --  the controls get kind of cursed
     local currentPos = owner:EyePos()
     local trace = util.TraceLine({
@@ -92,7 +94,7 @@ function SWEP:PrimaryAttack()
     
     local verticalPower = GetConVar("purechaos_verticalpower"):GetInt() or 30
     timer.Create("ChaosFlight_" .. owner:SteamID(), 0.2, 0, function()
-        if not IsValid(owner) or ende then
+        if not IsValid(owner) or not owner:Alive() or ende then
             timer.Remove("ChaosFlight_" .. owner:SteamID())
             return
         end
@@ -122,7 +124,7 @@ function SWEP:PrimaryAttack()
 
     -- After 4 seconds, start damaging players in range
     timer.Simple(4, function()
-        if IsValid(owner) then
+        if IsValid(owner) and owner:Alive() then
             local range = GetConVar("purechaos_range"):GetInt() or 4000
             local damage = GetConVar("purechaos_damage"):GetInt() or 110
 
@@ -155,11 +157,11 @@ function SWEP:PrimaryAttack()
                 end
             end)
             
-            owner:SetMoveType(originalMoveType)
-            owner:SetWalkSpeed(originalWalkSpeed)
             ende = true
             owner:SetNWBool("PureChaosActive", false)
-            owner:SendLua("RunConsoleCommand('firstperson')")
+            -- owner:SendLua("RunConsoleCommand('firstperson')")
+            owner:SetMoveType(originalMoveType)
+            owner:SetWalkSpeed(originalWalkSpeed)
 
             
             -- Remove weapon after use
@@ -205,5 +207,13 @@ hook.Add("PreDrawHalos", "PureChaos_HighlightEnemies", function()
 
     if #enemies > 0 then
         halo.Add(enemies, Color(255, 0, 0), 2, 2, 1, true, true)
+    end
+end)
+
+hook.Add("PlayerDeath", "PureChaos_StopSoundOnDeath", function(victim, inflictor, attacker)
+    if not IsValid(victim) then return end
+    if victim:GetNWBool("PureChaosActive", false) then
+        --victim:StopSound("pure_chaos.ogg")
+        victim:StopSound("pure_chaos_kller.ogg")
     end
 end)
