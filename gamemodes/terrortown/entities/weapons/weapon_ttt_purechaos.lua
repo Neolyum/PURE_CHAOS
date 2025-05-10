@@ -90,9 +90,12 @@ function SWEP:PrimaryAttack()
         end
     end
 
-    local soundFile = useAlt and "pure_chaos_kller.ogg" or "pure_chaos.ogg"
+    local soundFile = "pure_chaos.ogg"
+    if useAlt then
+        soundFile = "pure_chaos_kller.ogg"
+    end
 
-    self:EmitSound(soundFile, SNDLVL_NONE)
+    owner:EmitSound(soundFile, SNDLVL_NONE)
     owner:SetNWBool("PureChaosActive", true)
 
 
@@ -243,7 +246,10 @@ hook.Add("PlayerDeath", "PureChaos_StopSoundOnDeath", function(victim, inflictor
             end
         end
 
-        local soundFile = useAlt and "pure_chaos_kller.ogg" or "pure_chaos.ogg"
+        local soundFile = "pure_chaos.ogg"
+        if useAlt then
+            soundFile = "pure_chaos_kller.ogg"
+        end
         victim:StopSound(soundFile)
     end
 end)
