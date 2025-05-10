@@ -76,6 +76,12 @@ A settings menu is available under the **TTT2 Server Addons** section, allowing 
 
 ## Changelog
 
+### Version 1.1
+* No more damage after Death of Player. 
+* Replace pure chaos sound with a little joke, provided by kller.
+* Stop sound on death.
+* Make the alternative sound toggle-able and also client overridable.
+
 ### Version 1.0
 
 * Initial release with full weapon functionality.
